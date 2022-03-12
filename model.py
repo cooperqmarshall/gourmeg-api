@@ -43,3 +43,4 @@ class RecipeList(db.Model):
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
     name = Column(String)
     user_id = Column(Integer, ForeignKey('User.id'))
+

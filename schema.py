@@ -1,6 +1,6 @@
 from flask_marshmallow import Marshmallow
 from app import app
-from model import User, Recipe
+from model import User, Recipe, RecipeList
 
 ma = Marshmallow(app)
 
@@ -27,3 +27,14 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
 recipeSchema = RecipeSchema()
 recipesSchema = RecipeSchema(many=True,
                              only=("id", "name", "recipe_list_name"))
+
+class RecipeListSchema(ma.SQLAlchemyAutoSchema):
+
+    class Meta:
+        model = RecipeList
+        fields = ("id", "name")
+
+
+recipeListSchema = RecipeListSchema()
+recipeListsSchema = RecipeListSchema(many=True)
+

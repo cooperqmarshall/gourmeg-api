@@ -16,6 +16,7 @@ flask-login = {editable = true, git = "https://github.com/maxcountryman/flask-lo
 werkzeug = "*"
 beautifulsoup4 = "*"
 requests = "*"
+argon2 = "*"
 
 [dev-packages]
 yapf = "*"
