@@ -1,10 +1,10 @@
 from requests.models import MissingSchema
 from app import app, login_manager
 from model import db, User, Recipe, RecipeList
-from schema import userSchema, recipesSchema, recipeSchema, recipeListsSchema 
+from schema import recipeListSchema, userSchema, recipesSchema, recipeSchema, recipeListsSchemaWithoutRecipes, recipeListsSchemaWithRecipes
 from passlib.hash import argon2
 from flask.wrappers import Response
-from flask import request 
+from flask import request
 from flask_login import login_user, login_required, current_user
 from datetime import timedelta
 from utils import validate_request, scrape_recipe_url
@@ -108,15 +108,17 @@ def add_recipe():
                     user_id=current_user.id,
                     recipe_list_name=args['list'])
     try:
-        name, data = scrape_recipe_url(db, args['url'])
+        data = scrape_recipe_url(db, args['url'])
     except (MissingSchema, IndexError) as error:
         print(error)
         return Response('{"field": "url", "error": "error with recipe website"}',
                         status=400,
-                        mimetype='application/json') 
-    recipe.data = data
-    recipe.name = name
-    
+                        mimetype='application/json')
+
+    recipe.ingredients = data['ingredients']
+    recipe.instructions = data['instructions']
+    recipe.name = data['name']
+
     recipe_list = RecipeList.query.filter(
         RecipeList.name == args['list']).join(
             RecipeList.user).filter(User.id == current_user.id).first()
@@ -134,8 +136,20 @@ def add_recipe():
 @app.get('/api/v1/recipe_lists')
 @login_required
 def read_lists():
-    return {"recipe_lists": recipeListsSchema.dump(current_user.recipe_lists)}
+    args = validate_request(request, ['withRecipes'], query=True)
+    if type(args) is Response:
+        return args
+    schema = recipeListsSchemaWithRecipes if args['withRecipes'] == "true" else recipeListsSchemaWithoutRecipes
+    return {"recipe_lists": schema.dump(current_user.recipe_lists)}
 
+
+@app.delete('/api/v1/recipe_list/<int:id>')
+@login_required
+def delete_list(id):
+    recipe_list = RecipeList.query.get(id)
+    db.session.delete(recipe_list)
+    db.session.commit()
+    return recipeListSchema.dump(recipe_list)
 
 
 @app.delete('/api/v1/recipe')
@@ -148,4 +162,3 @@ def del_recipe():
     db.session.delete(recipe)
     db.session.commit()
     return recipeSchema.dump(recipe)
-

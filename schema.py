@@ -21,20 +21,23 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'url', 'user_id', 'recipe_list_id',
-                  'recipe_list_name', 'data')
+                  'recipe_list_name', 'ingredients', 'instructions')
 
 
 recipeSchema = RecipeSchema()
 recipesSchema = RecipeSchema(many=True,
-                             only=("id", "name", "recipe_list_name"))
+                             only=("id", "name", "ingredients", "instructions", "url"))
+
 
 class RecipeListSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = RecipeList
-        fields = ("id", "name")
+        fields = ("id", "name", "recipes")
+    recipes = ma.Nested(recipesSchema)
 
 
 recipeListSchema = RecipeListSchema()
-recipeListsSchema = RecipeListSchema(many=True)
-
+recipeListsSchemaWithRecipes = RecipeListSchema(many=True)
+recipeListsSchemaWithoutRecipes = RecipeListSchema(
+    many=True, only=("id", "name"))

@@ -17,6 +17,7 @@ werkzeug = "*"
 beautifulsoup4 = "*"
 requests = "*"
 argon2 = "*"
+autopep8 = "*"
 
 [dev-packages]
 yapf = "*"
