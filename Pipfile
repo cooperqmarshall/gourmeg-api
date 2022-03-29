@@ -18,6 +18,7 @@ beautifulsoup4 = "*"
 requests = "*"
 argon2 = "*"
 autopep8 = "*"
+gunicorn = "*"
 
 [dev-packages]
 yapf = "*"
