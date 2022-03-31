@@ -10,7 +10,7 @@ CORS(app, supports_credentials=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config[
-    'SQLALCHEMY_ECHO'] = os.environ['FLASK_ENV'] == 'development'
+    'SQLALCHEMY_ECHO'] = False  # os.environ['FLASK_ENV'] == 'development'
 
 login_manager = LoginManager()
 app.config['SESSION_COOKIE_SECURE'] = False

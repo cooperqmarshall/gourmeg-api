@@ -21,6 +21,7 @@ argon2 = "*"
 autopep8 = "*"
 gunicorn = "*"
 app = {editable = true, path = "."}
+setuptools = "*"
 
 [dev-packages]
 yapf = "*"
