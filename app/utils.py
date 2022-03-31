@@ -2,7 +2,7 @@ from flask.wrappers import Response
 from bs4 import BeautifulSoup
 import requests
 from requests.models import MissingSchema
-from model import Recipe
+from app.model import Recipe
 
 
 def validate_request(request, required_args, query=False):

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4a3600f1000513bcdadf6bf436560950090e5e079258890299badcc5138714e9"
+            "sha256": "3524f88f3c22875472d51df421634469cdf3da3e03110fae704ca1b494aa3f8f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,10 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==1.7.7"
+        },
+        "app": {
+            "editable": true,
+            "path": "."
         },
         "argon2": {
             "hashes": [
@@ -89,7 +93,7 @@
         "flask-login": {
             "editable": true,
             "git": "https://github.com/maxcountryman/flask-login",
-            "ref": "264ae9707ef3597c9377016e1cd2bf3f1a3ccc39"
+            "ref": "0f94639858946ea8e921743db684b6da97d46385"
         },
         "flask-marshmallow": {
             "hashes": [

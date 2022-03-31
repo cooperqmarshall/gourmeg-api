@@ -19,6 +19,7 @@ requests = "*"
 argon2 = "*"
 autopep8 = "*"
 gunicorn = "*"
+app = {editable = true, path = "."}
 
 [dev-packages]
 yapf = "*"
