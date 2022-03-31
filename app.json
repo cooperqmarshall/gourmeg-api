@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dokku": {
-      "postdeploy": "pipenv run flask db init && pipenv run flask db migrate && pipenv run flask db upgrade"
+      "postdeploy": "pipenv run flask db init ; pipenv run flask db migrate ; pipenv run flask db upgrade"
     }
   }
 }
