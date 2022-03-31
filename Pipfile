@@ -17,6 +17,7 @@ beautifulsoup4 = "*"
 requests = "*"
 gunicorn = "*"
 argon2-cffi = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 yapf = "*"
