@@ -8,23 +8,20 @@ flask = "*"
 flask-sqlalchemy = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
-psycopg2 = "~=2.8.3"
+psycopg2 = "*"
 flask-migrate = "*"
-python-dotenv = "*"
-passlib = "*"
+passlib = {extras = ["argon2"], version = "*"}
 flask-cors = "*"
 flask-login = {editable = true, git = "https://github.com/maxcountryman/flask-login"}
 werkzeug = "*"
 beautifulsoup4 = "*"
 requests = "*"
-argon2 = "*"
-autopep8 = "*"
 gunicorn = "*"
-app = {editable = true, path = "."}
-setuptools = "*"
+argon2-cffi = "*"
 
 [dev-packages]
 yapf = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.9"
