@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATjABASE_URI']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config[
     'SQLALCHEMY_ECHO'] = False  # os.environ['FLASK_ENV'] == 'development'
