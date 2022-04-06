@@ -19,6 +19,9 @@ app.config['SESSION_COOKIE_HTTPONLY'] = False
 app.config['REMEMBER_COOKIE_HTTPONLY'] = False
 app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
 app.config['REMEMBER_COOKIE_SAMESITE'] = "Strict"
+if os.environ['COOKIE_DOMAIN']:
+    app.config['SESSION_COOKIE_DOMAIN'] = os.environ['COOKIE_DOMAIN']
+    app.config['REMEMBER_COOKIE_DOMAIN'] = os.environ['COOKIE_DOMAIN']
 login_manager.init_app(app)
 app.secret_key = os.environ['SECRET_KEY']
 
