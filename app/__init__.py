@@ -15,8 +15,8 @@ app.config[
 login_manager = LoginManager()
 app.config['SESSION_COOKIE_SECURE'] = False
 app.config['REMEMBER_COOKIE_SECURE'] = False
-# app.config['SESSION_COOKIE_HTTPONLY'] = True
-# app.config['REMEMBER_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = False
+app.config['REMEMBER_COOKIE_HTTPONLY'] = False
 app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
 app.config['REMEMBER_COOKIE_SAMESITE'] = "Strict"
 login_manager.init_app(app)
