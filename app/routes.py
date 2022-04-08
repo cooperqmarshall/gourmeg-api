@@ -1,3 +1,5 @@
+from os import stat
+from flask_login.utils import logout_user
 from requests.models import MissingSchema
 from app import app, login_manager
 from app.model import db, User, Recipe, RecipeList
@@ -5,7 +7,7 @@ from app.schema import recipeListSchema, userSchema, recipesSchema, recipeSchema
 from passlib.hash import argon2
 from flask.wrappers import Response
 from flask import request
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, login_required, current_user, logout_user
 from datetime import timedelta
 from app.utils import validate_request, scrape_recipe_url
 import threading
@@ -83,6 +85,14 @@ def signin():
 
     login_user(user, remember=True, duration=timedelta(days=100))
     return userSchema.dump(user)
+
+@app.get('/api/v1/logout')
+@login_required
+def logout():
+    logout_user()
+    response = Response({'some': 'data'}, status=200)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return "logout sucessful", 200
 
 
 @app.get('/api/v1/me')
