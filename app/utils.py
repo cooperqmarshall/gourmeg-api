@@ -33,7 +33,10 @@ def scrape_recipe_url(url):
     instruct_div = _search_attrs(soup, instruct_classes)
     instructions = _remove_html_attrs(instruct_div)
 
-    imgs = [img['src'] for img in soup.select('img') if img['src'][0:4] == 'http' and (img['src'][-4:] in ('.jpg', '.png'))]
+    imgs = [img for img in soup.find_all('img') if 'src' in img.attrs.keys() and img['src'][0:4] == 'http' and (img['src'][-3:] in ('jpg', 'png'))]
+
+    imgs.sort(key = lambda x: int(x['width']) * int(x['height']), reverse=True)
+    imgs = [img['src'] for img in imgs]
 
     if ingredients(['iframe', 'script', 'input', 'button']):
         [s.extract() for s in ingredients(['iframe', 'script', 'input', 'button'])]
