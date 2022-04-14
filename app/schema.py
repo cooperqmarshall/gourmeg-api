@@ -21,12 +21,12 @@ class RecipeSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'url', 'user_id', 'recipe_list_id',
-                  'recipe_list_name', 'ingredients', 'instructions')
+                  'recipe_list_name', 'ingredients', 'instructions', 'image_urls')
 
 
 recipeSchema = RecipeSchema()
 recipesSchema = RecipeSchema(many=True,
-                             only=("id", "name", "ingredients", "instructions", "url"))
+                             only=("id", "name", "ingredients", "instructions", "url", 'image_urls'))
 
 
 class RecipeListSchema(ma.SQLAlchemyAutoSchema):

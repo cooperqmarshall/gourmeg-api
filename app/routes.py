@@ -118,7 +118,7 @@ def add_recipe():
                     user_id=current_user.id,
                     recipe_list_name=args['list'])
     try:
-        data = scrape_recipe_url(db, args['url'])
+        data = scrape_recipe_url(args['url'])
     except (MissingSchema, IndexError) as error:
         print(error)
         return Response('{"field": "url", "error": "error with recipe website"}',
@@ -128,6 +128,7 @@ def add_recipe():
     recipe.ingredients = data['ingredients']
     recipe.instructions = data['instructions']
     recipe.name = data['name']
+    recipe.image_urls = data['imgs']
 
     recipe_list = RecipeList.query.filter(
         RecipeList.name == args['list']).join(

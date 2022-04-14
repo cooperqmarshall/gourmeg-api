@@ -17,7 +17,7 @@ def validate_request(request, required_args, query=False):
     return args_dict
 
 
-def scrape_recipe_url(db, url):
+def scrape_recipe_url(url):
     page = requests.get(url=url, headers={
                         "User-Agent": """Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:97.0) Gecko/20100101 Firefox/97.0"""})
     soup = BeautifulSoup(page.content, "html.parser")
@@ -33,9 +33,11 @@ def scrape_recipe_url(db, url):
     instruct_div = _search_attrs(soup, instruct_classes)
     instructions = _remove_html_attrs(instruct_div)
 
-    if ingredients(['iframe', 'script', 'input']):
-        [s.extract() for s in ingredients(['iframe', 'script', 'input'])]
-    return {"name": soup.title.string, "ingredients": str(ingredients), "instructions": str(instructions)}
+    imgs = [img['src'] for img in soup.select('img') if img['src'][0:4] == 'http' and (img['src'][-4:] in ('.jpg', '.png'))]
+
+    if ingredients(['iframe', 'script', 'input', 'button']):
+        [s.extract() for s in ingredients(['iframe', 'script', 'input', 'button'])]
+    return {"name": soup.title.string, "ingredients": str(ingredients), "instructions": str(instructions), "imgs": imgs}
 
 
 def _search_attrs(soup, search_list):
