@@ -1,4 +1,4 @@
-# Gourmeg UI
+# Gourmeg API
 Back-end for [gourmeg.org](https://gourmeg.org). Built with python using the flask and Sqlalchemy pachages.
 
 Checkout the accompanying [UI repositury](https://github.com/cooperqmarshall/gourmeg-ui)
