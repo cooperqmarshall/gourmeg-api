@@ -28,8 +28,8 @@ def scrape_recipe_url(url):
     ingredient_div = _search_attrs(soup, ingredient_classes)
     ingredients = _remove_html_attrs(ingredient_div)
 
-    instruct_classes = ['step', 'instruction', 'Instruction',
-                        'direction', 'Preparation', 'preparation']
+    instruct_classes = ['instruction', 'Instruction',
+                        'direction', 'Preparation', 'preparation', 'step']
     instruct_div = _search_attrs(soup, instruct_classes)
     instructions = _remove_html_attrs(instruct_div)
 
