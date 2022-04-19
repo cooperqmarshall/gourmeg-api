@@ -35,7 +35,7 @@ def scrape_recipe_url(url):
 
     imgs = [img for img in soup.find_all('img') if 'src' in img.attrs.keys() and img['src'][0:4] == 'http' and (img['src'][-3:] in ('jpg', 'png'))]
 
-    imgs.sort(key = lambda x: (int(x['width']) if 'width' in x.attrs.keys() else 100) * (int(x['height']) if 'height' in x.attrs.keys() else 100), reverse=True)
+    imgs.sort(key = lambda x: (int(x['width']) if 'width' in x.attrs.keys() and x['width'] != 'auto' else 100) * (int(x['height']) if 'height' in x.attrs.keys() and x['height'] != 'auto' else 100), reverse=True)
     imgs = [img['src'] for img in imgs]
 
     if ingredients(['iframe', 'script', 'input', 'button']):
