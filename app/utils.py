@@ -32,13 +32,21 @@ def scrape_recipe_url(url):
     instruct_div = _search_attrs(soup, instruct_classes)
     instructions = _remove_html_attrs(instruct_div)
 
-    imgs = [img for img in soup.find_all('img') if 'src' in img.attrs.keys() and img['src'][0:4] == 'http' and (img['src'][-3:] in ('jpg', 'png'))]
+    imgs = [img for img in soup.find_all('img') if 'src' in img.attrs.keys() and img['src'][0:4] == 'http']
 
     imgs.sort(key = lambda x: (int(x['width']) if 'width' in x.attrs.keys() and x['width'] != 'auto' else 100) * (int(x['height']) if 'height' in x.attrs.keys() and x['height'] != 'auto' else 100), reverse=True)
     imgs = [img['src'] for img in imgs]
 
-    if ingredients(['iframe', 'script', 'input', 'button']):
-        [s.extract() for s in ingredients(['iframe', 'script', 'input', 'button'])]
+    if ingredients(['iframe', 'script', 'input', 'button', 'label']):
+        [s.extract() for s in ingredients(['iframe', 'script', 'input', 'button', 'label'])]
+    if ingredients(['span']):
+        [span.unwrap() for span in ingredients.findAll(['span'])]
+
+    if instructions(['iframe', 'script', 'input', 'button', 'label']):
+        [s.extract() for s in instructions(['iframe', 'script', 'input', 'button', 'label'])]
+    if instructions(['span']):
+        [span.unwrap() for span in instructions.findAll(['span'])]
+
     return {"name": soup.title.string, "ingredients": str(ingredients), "instructions": str(instructions), "imgs": imgs}
 
 
