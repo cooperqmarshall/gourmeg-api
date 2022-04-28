@@ -37,13 +37,13 @@ def scrape_recipe_url(url):
     imgs.sort(key = lambda x: (int(x['width']) if 'width' in x.attrs.keys() and x['width'] != 'auto' else 100) * (int(x['height']) if 'height' in x.attrs.keys() and x['height'] != 'auto' else 100), reverse=True)
     imgs = [img['src'] for img in imgs]
 
-    if ingredients(['iframe', 'script', 'input', 'button', 'label']):
-        [s.extract() for s in ingredients(['iframe', 'script', 'input', 'button', 'label'])]
+    if ingredients(['iframe', 'script', 'input', 'button']):
+        [s.extract() for s in ingredients(['iframe', 'script', 'input', 'button'])]
     if ingredients(['span']):
         [span.unwrap() for span in ingredients.findAll(['span'])]
 
-    if instructions(['iframe', 'script', 'input', 'button', 'label']):
-        [s.extract() for s in instructions(['iframe', 'script', 'input', 'button', 'label'])]
+    if instructions(['iframe', 'script', 'input', 'button']):
+        [s.extract() for s in instructions(['iframe', 'script', 'input', 'button'])]
     if instructions(['span']):
         [span.unwrap() for span in instructions.findAll(['span'])]
 
