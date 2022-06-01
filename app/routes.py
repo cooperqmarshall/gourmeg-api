@@ -1,4 +1,3 @@
-from os import stat
 from flask_login.utils import logout_user
 from requests.models import MissingSchema
 from app import app, login_manager
@@ -10,7 +9,6 @@ from flask import request
 from flask_login import login_user, login_required, current_user, logout_user
 from datetime import timedelta
 from app.utils import validate_request, scrape_recipe_url
-import threading
 
 
 @login_manager.user_loader
