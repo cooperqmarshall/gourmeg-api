@@ -35,6 +35,7 @@ class Recipe(db.Model):
     instructions = Column(Text)
     ingredients = Column(Text)
     image_urls = Column(Text)
+    views = Column(Integer, default=0)
 
 
 class RecipeList(db.Model):

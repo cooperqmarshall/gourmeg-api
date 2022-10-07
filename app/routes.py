@@ -141,6 +141,18 @@ def add_recipe():
     db.session.refresh(recipe)
     return recipeSchema.dump(recipe)
 
+@app.put('/api/v1/recipe_view')
+@login_required
+def put_recipe():
+    args = validate_request(request, ['id'])
+    if type(args) is Response:
+        return args
+    recipe = Recipe.query.filter_by(id=args['id']).first()
+    recipe.views += 1
+    db.session.commit()
+    db.session.refresh(recipe)
+    return recipeSchema.dump(recipe)
+
 
 @app.get('/api/v1/recipe_lists')
 @login_required
