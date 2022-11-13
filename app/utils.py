@@ -1,8 +1,6 @@
 from flask.wrappers import Response
 from bs4 import BeautifulSoup
 import requests
-from requests.models import MissingSchema
-from app.model import Recipe
 
 
 def validate_request(request, required_args, query=False):
@@ -28,13 +26,16 @@ def scrape_recipe_url(url):
     ingredient_div = _search_attrs(soup, ingredient_classes)
     ingredients = _remove_html_attrs(ingredient_div)
 
-    instruct_classes = ['instructions', 'Instructions', 'directions', 'Directions' , 'Direction' , 'Preparation', 'preparation', 'instruction' , 'Instruction' , 'steps' , 'Steps']
+    instruct_classes = ['instructions', 'Instructions', 'directions', 'Directions',
+                        'Direction', 'Preparation', 'preparation', 'instruction', 'Instruction', 'steps', 'Steps']
     instruct_div = _search_attrs(soup, instruct_classes)
     instructions = _remove_html_attrs(instruct_div)
 
-    imgs = [img for img in soup.find_all('img') if 'src' in img.attrs.keys() and img['src'][0:4] == 'http']
+    imgs = [img for img in soup.find_all(
+        'img') if 'src' in img.attrs.keys() and img['src'][0:4] == 'http']
 
-    imgs.sort(key = lambda x: (int(x['width']) if 'width' in x.attrs.keys() and x['width'] != 'auto' else 100) * (int(x['height']) if 'height' in x.attrs.keys() and x['height'] != 'auto' else 100), reverse=True)
+    imgs.sort(key=lambda x: (int(x['width']) if 'width' in x.attrs.keys() and x['width'] != 'auto' else 100) * (
+        int(x['height']) if 'height' in x.attrs.keys() and x['height'] != 'auto' else 100), reverse=True)
     imgs = [img['src'] for img in imgs]
 
     if ingredients(['iframe', 'script', 'input', 'button']):

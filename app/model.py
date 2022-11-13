@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import VARCHAR, Column, String, Integer, DateTime, Text, func, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, Text, func, ForeignKey
 from sqlalchemy.orm import backref, relationship
 from flask_login import UserMixin
 from app import app
@@ -27,7 +27,8 @@ class Recipe(db.Model):
     user_id = Column(Integer, ForeignKey('User.id'))
     recipe_list_id = Column(Integer, ForeignKey('RecipeList.id'))
     recipe_list_name = Column(String)
-    recipe_list = relationship('RecipeList', backref=backref('recipes', cascade='all,delete'))
+    recipe_list = relationship(
+        'RecipeList', backref=backref('recipes', cascade='all,delete'))
     name = Column(String)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
@@ -46,4 +47,3 @@ class RecipeList(db.Model):
     time_updated = Column(DateTime(timezone=True), onupdate=func.now())
     name = Column(String)
     user_id = Column(Integer, ForeignKey('User.id'))
-

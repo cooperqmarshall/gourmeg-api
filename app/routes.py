@@ -18,8 +18,8 @@ def load_user(user_id):
 
 @app.get('/api/v1/user/<int:id>')
 def user(id):
-    user = User.query.get_or_404(id,
-                                 description=f'There is no user with id: {id}')
+    user = User.query.get_or_404(
+        id, description=f'There is no user with id: {id}')
     return userSchema.dump(user)
 
 
@@ -44,7 +44,7 @@ def register():
             mimetype='application/json')
     if len(args['password']) < 2 or len(args['password']) > 30:
         return Response(
-            '{"field": "password", "error": "password must be between 2 and 30 characters"}',
+            '{"field": "password", "error":"password must be between 2 and 30 characters"}',
             status=401,
             mimetype='application/json')
 
@@ -83,6 +83,7 @@ def signin():
 
     login_user(user, remember=True, duration=timedelta(days=100))
     return userSchema.dump(user)
+
 
 @app.get('/api/v1/logout')
 @login_required
@@ -140,6 +141,7 @@ def add_recipe():
     db.session.commit()
     db.session.refresh(recipe)
     return recipeSchema.dump(recipe)
+
 
 @app.put('/api/v1/recipe_view')
 @login_required
