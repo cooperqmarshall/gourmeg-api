@@ -18,6 +18,7 @@ requests = "*"
 gunicorn = "*"
 argon2-cffi = "*"
 psycopg2-binary = "*"
+pytest = "*"
 
 [dev-packages]
 yapf = "*"

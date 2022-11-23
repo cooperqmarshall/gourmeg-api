@@ -8,7 +8,7 @@ from flask.wrappers import Response
 from flask import request
 from flask_login import login_user, login_required, current_user, logout_user
 from datetime import timedelta
-from app.utils.utils import validate_request, scrape_recipe_url
+from app.utils.recipe_webscraper import validate_request, scrape_recipe_url
 
 
 @login_manager.user_loader

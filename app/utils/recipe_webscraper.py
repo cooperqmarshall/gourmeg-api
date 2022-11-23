@@ -1,6 +1,9 @@
 from flask.wrappers import Response
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 import requests
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def validate_request(request, required_args, query=False):
@@ -13,6 +16,25 @@ def validate_request(request, required_args, query=False):
                             mimetype='application/json')
         args_dict[a] = arg
     return args_dict
+
+
+def calculate_ingredient_score(tag: Tag) -> int:
+    score = (
+        30 * tag_has_class(tag, 'ingredient') +
+        30 * tag_content_begins_with_number(tag)
+    )
+    # log.debug(f'Tag {tag} ingredient score: {score}')
+    return score
+
+
+def tag_has_class(tag: Tag, class_name: str) -> bool:
+    # log.debug("".join(tag['class']).lower())
+    return tag.has_attr('class') and class_name in "".join(tag['class']).lower()
+
+
+def tag_content_begins_with_number(tag: Tag) -> bool:
+    # log.debug(tag.string)
+    return tag.string is not None and len(tag.string) > 0 and tag.string[0].isnumeric()
 
 
 def scrape_recipe_url(url):
