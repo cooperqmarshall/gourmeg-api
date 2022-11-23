@@ -1,6 +1,6 @@
 from flask_marshmallow import Marshmallow
 from app import app
-from app.model import User, Recipe, RecipeList
+from app.db.model import User, Recipe, RecipeList
 
 ma = Marshmallow(app)
 

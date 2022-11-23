@@ -1,14 +1,14 @@
 from flask_login.utils import logout_user
 from requests.models import MissingSchema
 from app import app, login_manager
-from app.model import db, User, Recipe, RecipeList
-from app.schema import recipeListSchema, userSchema, recipesSchema, recipeSchema, recipeListsSchemaWithoutRecipes, recipeListsSchemaWithRecipes
+from app.db.model import db, User, Recipe, RecipeList
+from app.db.schema import recipeListSchema, userSchema, recipesSchema, recipeSchema, recipeListsSchemaWithoutRecipes, recipeListsSchemaWithRecipes
 from passlib.hash import argon2
 from flask.wrappers import Response
 from flask import request
 from flask_login import login_user, login_required, current_user, logout_user
 from datetime import timedelta
-from app.utils import validate_request, scrape_recipe_url
+from app.utils.utils import validate_request, scrape_recipe_url
 
 
 @login_manager.user_loader

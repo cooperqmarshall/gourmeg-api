@@ -28,7 +28,8 @@ app.secret_key = os.environ['SECRET_KEY']
 # Objects
 
 # fmt: off
-from app.model import db
+from app.db.model import db
 migrate = Migrate(app, db)
-from app import routes, schema
+import app.api.routes
+import app.db.schema
 # fmt: on
