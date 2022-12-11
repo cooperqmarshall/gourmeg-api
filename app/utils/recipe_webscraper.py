@@ -28,11 +28,36 @@ def calculate_ingredient_score(tag: Tag) -> int:
 
 
 def tag_has_class(tag: Tag, class_name: str) -> bool:
+    '''
+    Checks if a Beauifulsoup Tag contains a given string in its class
+    attribute.
+
+    params
+        tag: Beautifulsoup Tag object
+        class_name: string to check 
+
+    returns
+        True if class_name is found in the tag's class attribute and false
+        otherwise. 
+    '''
     # log.debug("".join(tag['class']).lower())
-    return tag.has_attr('class') and class_name in "".join(tag['class']).lower()
+    return tag.has_attr('class') and class_name in " ".join(tag['class']).lower()
 
 
 def tag_content_begins_with_number(tag: Tag) -> bool:
+    '''
+    Checks if a Beautifulsoup Tag starts with a number. This function uses
+    `isnumeric()` which includes fraction unicode chars compared to `isdigit()`
+    or other number checking string helper functions which have different
+    classifications for numbers.
+
+    params
+        tag: Beautifulsoup Tag object
+
+    returns
+        True if the first character in the Tag is a number. False if the first
+        character is not a number or there is no content.
+    '''
     # log.debug(tag.string)
     return tag.string is not None and len(tag.string) > 0 and tag.string[0].isnumeric()
 
