@@ -18,13 +18,17 @@ def validate_request(request, required_args, query=False):
     return args_dict
 
 
-def calculate_ingredient_score(tag: Tag) -> int:
+def is_ingredient_tag(tag: Tag, score_threshold: int) -> int:
+    content = tag.get_text()
+    if len(content) == 0:
+        return False
     score = (
         30 * tag_has_class(tag, 'ingredient') +
-        30 * tag_content_begins_with_number(tag)
+        30 * content[0].isnumeric() +
+        30 * (len(content) < 100)
     )
     # log.debug(f'Tag {tag} ingredient score: {score}')
-    return score
+    return score >= score_threshold
 
 
 def tag_has_class(tag: Tag, class_name: str) -> bool:
@@ -34,32 +38,20 @@ def tag_has_class(tag: Tag, class_name: str) -> bool:
 
     params
         tag: Beautifulsoup Tag object
-        class_name: string to check 
+        class_name: string to check
 
     returns
         True if class_name is found in the tag's class attribute and false
-        otherwise. 
+        otherwise.
     '''
     # log.debug("".join(tag['class']).lower())
     return tag.has_attr('class') and class_name in " ".join(tag['class']).lower()
 
 
-def tag_content_begins_with_number(tag: Tag) -> bool:
     '''
-    Checks if a Beautifulsoup Tag starts with a number. This function uses
-    `isnumeric()` which includes fraction unicode chars compared to `isdigit()`
-    or other number checking string helper functions which have different
-    classifications for numbers.
 
-    params
-        tag: Beautifulsoup Tag object
 
-    returns
-        True if the first character in the Tag is a number. False if the first
-        character is not a number or there is no content.
     '''
-    # log.debug(tag.string)
-    return tag.string is not None and len(tag.string) > 0 and tag.string[0].isnumeric()
 
 
 def scrape_recipe_url(url):

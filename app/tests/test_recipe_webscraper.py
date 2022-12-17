@@ -1,5 +1,6 @@
+import logging
 from bs4 import BeautifulSoup
-from app.utils.recipe_webscraper import calculate_ingredient_score
+from app.utils.recipe_webscraper import is_ingredient_tag, traverse_recipe_html
 
 
 html = '''
@@ -15,18 +16,26 @@ Stir
 '''
 
 
-soup = BeautifulSoup(html, "html.parser")
+def test_calculate_ingredient_score(caplog):
+    caplog.set_level(logging.DEBUG, logger='app.utils.recipe_webscraper')
 
+    tag = soup.new_tag('li', attrs={'class': ''})
+    assert is_ingredient_tag(tag) == 0
 
-def test_calculate_ingredient_score():
     tag = soup.new_tag('li', attrs={'class': ''})
     tag.string = ""
-    assert calculate_ingredient_score(tag) == 0
+    assert is_ingredient_tag(tag) == 0
 
     tag = soup.new_tag('li', attrs={'class': 'container'})
     tag.string = "1 egg"
-    assert calculate_ingredient_score(tag) == 30
+    assert is_ingredient_tag(tag) == 30
 
-    tag = soup.new_tag('li', attrs={'class': 'ingredients'})
+    tag = soup.new_tag('li', attrs={'class': 'container ingredients'})
     tag.string = "1 egg"
-    assert calculate_ingredient_score(tag) == 60
+    assert is_ingredient_tag(tag) == 60
+
+    tag = soup.new_tag('li', attrs={'class': 'Ingredient-wrapper'})
+    tag.string = "1/2 egg"
+    assert is_ingredient_tag(tag) == 60
+
+
