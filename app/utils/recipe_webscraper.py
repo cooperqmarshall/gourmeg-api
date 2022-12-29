@@ -2,6 +2,7 @@ from flask.wrappers import Response
 from bs4 import BeautifulSoup, Tag
 import requests
 import logging
+import json
 
 log = logging.getLogger(__name__)
 
@@ -152,16 +153,63 @@ def get_recipe_html(soup: BeautifulSoup
     if ingredients_tag is None or instructions_tag is None:
         return None, None
 
-    _remove_html_attrs(ingredients_tag)
-    _remove_empty_tags(ingredients_tag)
-    _remove_tags(ingredients_tag, ['iframe', 'script', 'input', 'button'])
-
-    _remove_html_attrs(instructions_tag)
-    _remove_empty_tags(instructions_tag)
+    _clean_html(ingredients_tag, ['iframe', 'script', 'input', 'button'])
+    _clean_html(instructions_tag, ['iframe', 'script', 'input', 'button'])
 
     return ingredients_tag, instructions_tag
 
 
+def get_recipe_structured_data(soup: BeautifulSoup) -> tuple[list, list]:
+    ldjson_tags = soup.find_all('script', {'type': 'application/ld+json'})
+    data = [json.loads(tag.string) for tag in ldjson_tags]
+
+    ingredients, structured_instructions = search_recipe_structured_data(data)
+
+    instructions = []
+    extract_structured_instructions_data(
+        instructions,
+        structured_instructions)
+    # log.debug(ingredients)
+    # log.debug(instructions)
+    return ingredients, instructions
+
+
+def search_recipe_structured_data(data: list):
+    if not data:
+        return [], []
+
+    for item in data:
+        if type(item) == list:
+            ing, ins = search_recipe_structured_data(item)
+            if ing and ins:
+                return ing, ins
+
+        ing = item.get("recipeIngredient")
+        ins = item.get("recipeInstructions")
+        if ing and ins:
+            return ing, ins
+
+        if item.get("@graph"):
+            ing, ins = search_recipe_structured_data(item.get("@graph"))
+            if ing and ins:
+                return ing, ins
+
+    return [], []
+
+
+def extract_structured_instructions_data(instructions: list, structured_instructions: list):
+    for item in structured_instructions:
+        if type(item) == list:
+            extract_structured_instructions_data(instructions, item)
+
+        elif item.get("itemListElement"):
+            extract_structured_instructions_data(
+                instructions, item.get("itemListElement"))
+
+        elif item.get("@type") == "HowToStep":
+            instructions.append(item.get("text"))
+
+    return instructions
 
 
 def scrape_recipe_url(url):
@@ -215,6 +263,12 @@ def _search_attrs(soup, search_list):
             if attr != 'class':
                 if any(string in val for string in search_list):
                     return div
+
+
+def _clean_html(tag: Tag, remove_tags: list):
+    _remove_html_attrs(tag)
+    _remove_empty_tags(tag)
+    _remove_tags(tag, remove_tags)
 
 
 def _remove_html_attrs(parent_tag: Tag):
