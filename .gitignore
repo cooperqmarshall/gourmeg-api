@@ -1,4 +1,5 @@
 .env
+/.pytest_cache/
 /app.egg-info
 /build
 /app/__pycache__/
