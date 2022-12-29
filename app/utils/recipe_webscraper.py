@@ -89,7 +89,79 @@ def is_instruction_tag(tag: Tag, score_threshold: int = 3) -> int:
     # log.debug(f'Tag {tag} ingredient score: {sum(score)}')
     return sum(score) >= score_threshold
 
+
+def get_ingredients_and_instructions_parent_tags(
+    tag: Tag
+) -> tuple[Tag | None,
+           Tag | None]:
+
+    num_ingredient_children, num_instruction_children = 0, 0
+    ingredients_tag, instructions_tag = None, None
+
+    for child in tag.contents:
+        if type(child) == Tag and child.name != 'script':
+            ingredients_tag_child, instructions_tag_child = get_ingredients_and_instructions_parent_tags(
+                child)
+
+            if ingredients_tag and instructions_tag:
+                return ingredients_tag, instructions_tag
+
+            if ingredients_tag_child is not None:
+                num_ingredient_children += 1
+                ingredients_tag = ingredients_tag_child
+
+            if instructions_tag_child is not None:
+                num_instruction_children += 1
+                instructions_tag = instructions_tag_child
+
+    # If `tag` contains > 1 ingredients/instructions tags then `tag` is assumed
+    # to be the parent for the ingredients or instructions recipe content.
+    if is_ingredient_tag(tag) or num_ingredient_children > 1:
+        #log.debug(f'ingredient: {tag}')
+        ingredients_tag = tag
+
+    if is_instruction_tag(tag) or num_instruction_children > 1:
+        #log.debug(f'instruction: {tag}')
+        instructions_tag = tag
+
+    # If the tag does not have any ingredient children, but is flagged as an
+    # ingredient parent tag using an alternative criteria, then set `tag` as
+    # the `ingredients_tag`. This is useful in cases such as with:
+    # https://www.bonappetit.com/recipe/jammy-onion-and-miso-pasta where the
+    # ingredients do not follow <ul> <li> format
+    if ingredients_tag is None and is_ingredient_parent_tag(tag):
+        #log.debug(f'ingredient: {tag}')
+        ingredients_tag = tag
+
+    return ingredients_tag, instructions_tag
+
+
+def get_recipe_html(soup: BeautifulSoup
+                    ) -> tuple[Tag | None,
+                               Tag | None]:
     '''
+    Find the nearest common ansestor tag that contains all tags above
+    score_threshold
+    '''
+    if soup.body is None:
+        return None, None
+
+    ingredients_tag, instructions_tag = get_ingredients_and_instructions_parent_tags(
+        soup.body)
+
+    if ingredients_tag is None or instructions_tag is None:
+        return None, None
+
+    _remove_html_attrs(ingredients_tag)
+    _remove_empty_tags(ingredients_tag)
+    _remove_tags(ingredients_tag, ['iframe', 'script', 'input', 'button'])
+
+    _remove_html_attrs(instructions_tag)
+    _remove_empty_tags(instructions_tag)
+
+    return ingredients_tag, instructions_tag
+
+
 
 
 def scrape_recipe_url(url):
