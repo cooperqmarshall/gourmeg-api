@@ -145,8 +145,19 @@ def _search_attrs(soup, search_list):
                     return div
 
 
-def _remove_html_attrs(soup):
-    tag_list = soup.find_all(lambda tag: len(tag.attrs) > 0)
-    for tag in tag_list:
-        tag.attrs = {}
-    return soup
+def _remove_html_attrs(parent_tag: Tag):
+    [tag.attrs.clear() for tag in parent_tag.find_all() if tag.attrs]
+
+    if parent_tag.attrs:
+        parent_tag.attrs = {}
+
+    return parent_tag
+
+
+def _remove_empty_tags(parent_tag: Tag):
+    [tag.extract() for tag in parent_tag.find_all()
+     if len(tag.get_text(strip=True)) == 0]
+
+
+def _remove_tags(tag: Tag, remove_tags: list):
+    [t.extract() for t in tag(remove_tags)]
