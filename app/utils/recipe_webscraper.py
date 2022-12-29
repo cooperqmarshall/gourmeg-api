@@ -212,6 +212,34 @@ def extract_structured_instructions_data(instructions: list, structured_instruct
     return instructions
 
 
+def main_scrape(soup: BeautifulSoup) -> tuple[str, str]:
+    '''
+    Searches html for recipe ingredient and instructions data. Uses 2 methods
+    for searching: First looks for recipe data in ldjson structured data in the
+    head tag. Second, searches the html tree using depth first search for
+    content that looks like ingredients or instructions based on certain
+    criteria.
+
+    params:
+        soup: BeautifulSoup object of a recipe website
+
+    returns:
+        string of html formatted recipe ingredients 
+        string of html formatted recipe instructions
+    '''
+    ingredients, instructions = get_recipe_structured_data(soup)
+    if instructions and ingredients:
+        ingredients_html = f"""<div><h3>Ingredients</h3><ul>{''.join([f'<li>{ingredient}</li>' for ingredient in ingredients])}</ul><div>"""
+        instructions_html = f"""<div><h3>Instructions</h3><ol>{''.join([f'<li>{instruction}</li>' for instruction in instructions])}</ul></div>"""
+        return ingredients_html, instructions_html
+
+    instructions, ingredients = get_recipe_html(soup)
+    if instructions and ingredients:
+        return str(ingredients), str(instructions)
+
+    return "", ""
+
+
 def scrape_recipe_url(url):
     page = requests.get(url=url, headers={
                         "User-Agent": """Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:97.0) Gecko/20100101 Firefox/97.0"""})
