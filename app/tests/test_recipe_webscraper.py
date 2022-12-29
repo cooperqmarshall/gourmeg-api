@@ -51,3 +51,15 @@ def test_is_ingredient_tag():
     assert not is_ingredient_tag(tag)
 
 
+def test_is_instructions_tag():
+    tag = soup.new_tag('div', attrs={'class': 'instructions'})
+    tag.string = ""
+    assert not is_instruction_tag(tag)
+
+    tag = soup.new_tag('li', attrs={'class': 'instructions'})
+    tag.string = "Preheat the oven to 350"
+    assert is_instruction_tag(tag)
+
+    tag = soup.new_tag('li', attrs={'class': 'instructions'})
+    tag.string = "Whisk to combine"
+    assert is_instruction_tag(tag)

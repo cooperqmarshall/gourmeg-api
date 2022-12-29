@@ -68,6 +68,26 @@ def tag_has_class(tag: Tag, class_name: str | list[str]) -> bool:
     return any([c in tag_class for c in class_name])
 
 
+def is_instruction_tag(tag: Tag, score_threshold: int = 3) -> int:
+    content = tag.get_text().strip()
+    if len(content) == 0:
+        return False
+
+    first_words = [sentance.strip().split()[0]
+                   for sentance in content.split(".") if sentance.strip()]
+
+    score = [
+        any(word.lower() in ["bake", "stir", "preheat", "whisk", "dice", "prepair", "boil", "chop", "mix", "add", "heat", "pour"]
+            for word in first_words),
+        ((10 < len(content) < 650)
+         or (0 < len(first_words) < 8)),
+        # nice to have
+        tag_has_class(tag, ['instruction', "direction", "step"]),
+        tag.name in ["li"]
+    ]
+
+    # log.debug(f'Tag {tag} ingredient score: {sum(score)}')
+    return sum(score) >= score_threshold
 
     '''
 
