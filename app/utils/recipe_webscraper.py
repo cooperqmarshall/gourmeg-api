@@ -18,18 +18,32 @@ def validate_request(request, required_args, query=False):
     return args_dict
 
 
-def is_ingredient_tag(tag: Tag, score_threshold: int) -> int:
-    content = tag.get_text()
-    if len(content) == 0:
+def is_ingredient_tag(tag: Tag, score_threshold: int = 4) -> bool:
+    content = tag.get_text().strip()
+    if len(content) == 0 or tag_has_class(tag, ["rating", "nav", "social"]):
         return False
-    score = (
-        30 * tag_has_class(tag, 'ingredient') +
-        30 * content[0].isnumeric() +
-        30 * (len(content) < 100)
-    )
-    # log.debug(f'Tag {tag} ingredient score: {score}')
-    return score >= score_threshold
 
+    score = [
+        content[0].isnumeric(),
+        any(c.isalpha() for c in content),
+        (len(content) < 100),
+        # nice to have
+        tag_has_class(tag, 'ingredient'),
+        (tag.name in ["li"])
+    ]
+
+    return sum(score) >= score_threshold
+
+
+def is_ingredient_parent_tag(tag: Tag) -> bool:
+    content = tag.get_text().strip()
+    if len(content) == 0 or tag_has_class(tag, ["rating", "nav", "social"]):
+        return False
+
+    return (len(content) > 50
+            and "ingredient" in content.split()[0].lower()
+            and sum([any(char.isnumeric() for char in word) for word in content.split()]) > 2
+            and tag.name in ["div", "ul"])
 
 def tag_has_class(tag: Tag, class_name: str) -> bool:
     '''
