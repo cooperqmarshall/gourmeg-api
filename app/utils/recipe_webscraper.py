@@ -45,7 +45,8 @@ def is_ingredient_parent_tag(tag: Tag) -> bool:
             and sum([any(char.isnumeric() for char in word) for word in content.split()]) > 2
             and tag.name in ["div", "ul"])
 
-def tag_has_class(tag: Tag, class_name: str) -> bool:
+
+def tag_has_class(tag: Tag, class_name: str | list[str]) -> bool:
     '''
     Checks if a Beauifulsoup Tag contains a given string in its class
     attribute.
@@ -58,11 +59,14 @@ def tag_has_class(tag: Tag, class_name: str) -> bool:
         True if class_name is found in the tag's class attribute and false
         otherwise.
     '''
-    # log.debug("".join(tag['class']).lower())
-    return tag.has_attr('class') and class_name in " ".join(tag['class']).lower()
+    if not tag.has_attr('class'):
+        return False
+    if type(class_name) == str:
+        class_name = [class_name]
 
+    tag_class = " ".join(tag['class']).lower()
+    return any([c in tag_class for c in class_name])
 
-    '''
 
 
     '''
