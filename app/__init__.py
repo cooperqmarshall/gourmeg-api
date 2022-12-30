@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_login import LoginManager, logout_user
+from flask_login import LoginManager
 from flask_migrate import Migrate
 import os
 
@@ -9,8 +9,7 @@ recipe_app = Flask(__name__)
 CORS(recipe_app, supports_credentials=True)
 recipe_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
 recipe_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-recipe_app.config[
-    'SQLALCHEMY_ECHO'] = False  # os.environ['FLASK_ENV'] == 'development'
+recipe_app.config['SQLALCHEMY_ECHO'] = False
 
 login_manager = LoginManager()
 recipe_app.config['SESSION_COOKIE_SECURE'] = False
@@ -24,8 +23,6 @@ if os.environ['COOKIE_DOMAIN']:
     recipe_app.config['REMEMBER_COOKIE_DOMAIN'] = os.environ['COOKIE_DOMAIN']
 login_manager.init_app(recipe_app)
 recipe_app.secret_key = os.environ['SECRET_KEY']
-
-# Objects
 
 # fmt: off
 from app.db.model import db

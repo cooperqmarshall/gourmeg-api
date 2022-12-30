@@ -7,7 +7,6 @@ name = "pypi"
 flask = "*"
 flask-sqlalchemy = "*"
 flask-marshmallow = "*"
-marshmallow-sqlalchemy = "*"
 flask-migrate = "*"
 passlib = {extras = ["argon2"], version = "*"}
 flask-cors = "*"
@@ -18,11 +17,12 @@ requests = "*"
 gunicorn = "*"
 argon2-cffi = "*"
 psycopg2-binary = "*"
-pytest = "*"
+marshmallow-sqlalchemy = "*"
 
 [dev-packages]
 yapf = "*"
 autopep8 = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.10"
