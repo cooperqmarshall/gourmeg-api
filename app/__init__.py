@@ -27,6 +27,7 @@ recipe_app.secret_key = os.environ['SECRET_KEY']
 # fmt: off
 from app.db.model import db
 migrate = Migrate(recipe_app, db)
-import app.api.routes
+import app.api.routes_v1
+import app.api.routes_v2
 import app.db.schema
 # fmt: on
