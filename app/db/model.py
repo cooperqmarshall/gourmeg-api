@@ -2,9 +2,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer, DateTime, Text, func, ForeignKey
 from sqlalchemy.orm import backref, relationship
 from flask_login import UserMixin
-from app import app
+from app import recipe_app
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(recipe_app)
 
 
 class User(UserMixin, db.Model):

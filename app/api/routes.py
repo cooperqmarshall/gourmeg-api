@@ -1,6 +1,6 @@
 from flask_login.utils import logout_user
 from requests.models import MissingSchema
-from app import app, login_manager
+from app import recipe_app, login_manager
 from app.db.model import db, User, Recipe, RecipeList
 from app.db.schema import recipeListSchema, userSchema, recipesSchema, recipeSchema, recipeListsSchemaWithoutRecipes, recipeListsSchemaWithRecipes
 from passlib.hash import argon2
@@ -16,14 +16,14 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-@app.get('/api/v1/user/<int:id>')
+@recipe_app.get('/api/v1/user/<int:id>')
 def user(id):
     user = User.query.get_or_404(
         id, description=f'There is no user with id: {id}')
     return userSchema.dump(user)
 
 
-@app.get('/api/v1/user/<string:username>')
+@recipe_app.get('/api/v1/user/<string:username>')
 def username(username):
     user = User.query.filter_by(username=username).first()
     return userSchema.dump(user) if user else Response(
@@ -32,7 +32,7 @@ def username(username):
         mimetype='application/json')
 
 
-@app.post('/api/v1/register')
+@recipe_app.post('/api/v1/register')
 def register():
     args = validate_request(request, ['username', 'password'])
     if type(args) is Response:
@@ -63,7 +63,7 @@ def register():
     return userSchema.dump(user)
 
 
-@app.post('/api/v1/signin')
+@recipe_app.post('/api/v1/signin')
 def signin():
     args = validate_request(request, ['username', 'password'])
     if type(args) is Response:
@@ -85,7 +85,7 @@ def signin():
     return userSchema.dump(user)
 
 
-@app.get('/api/v1/logout')
+@recipe_app.get('/api/v1/logout')
 @login_required
 def logout():
     logout_user()
@@ -94,20 +94,20 @@ def logout():
     return "logout sucessful", 200
 
 
-@app.get('/api/v1/me')
+@recipe_app.get('/api/v1/me')
 @login_required
 def me():
     return userSchema.dump(current_user)
 
 
-@app.get('/api/v1/recipes')
+@recipe_app.get('/api/v1/recipes')
 @login_required
 def read_recipes():
     recipes = Recipe.query.filter_by(user_id=current_user.id).all()
     return {"recipes": recipesSchema.dump(recipes)}
 
 
-@app.post('/api/v1/recipe')
+@recipe_app.post('/api/v1/recipe')
 @login_required
 def add_recipe():
     args = validate_request(request, ['url', 'list'])
@@ -143,7 +143,7 @@ def add_recipe():
     return recipeSchema.dump(recipe)
 
 
-@app.put('/api/v1/recipe_view')
+@recipe_app.put('/api/v1/recipe_view')
 @login_required
 def put_recipe():
     args = validate_request(request, ['id'])
@@ -156,7 +156,7 @@ def put_recipe():
     return recipeSchema.dump(recipe)
 
 
-@app.get('/api/v1/recipe_lists')
+@recipe_app.get('/api/v1/recipe_lists')
 @login_required
 def read_lists():
     args = validate_request(request, ['withRecipes'], query=True)
@@ -166,7 +166,7 @@ def read_lists():
     return {"recipe_lists": schema.dump(current_user.recipe_lists)}
 
 
-@app.delete('/api/v1/recipe_list/<int:id>')
+@recipe_app.delete('/api/v1/recipe_list/<int:id>')
 @login_required
 def delete_list(id):
     recipe_list = RecipeList.query.get(id)
@@ -175,7 +175,7 @@ def delete_list(id):
     return recipeListSchema.dump(recipe_list)
 
 
-@app.delete('/api/v1/recipe')
+@recipe_app.delete('/api/v1/recipe')
 @login_required
 def del_recipe():
     args = validate_request(request, ['id'], query=True)

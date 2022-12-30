@@ -1,8 +1,8 @@
 from flask_marshmallow import Marshmallow
-from app import app
+from app import recipe_app
 from app.db.model import User, Recipe, RecipeList
 
-ma = Marshmallow(app)
+ma = Marshmallow(recipe_app)
 
 
 class UserSchema(ma.SQLAlchemyAutoSchema):

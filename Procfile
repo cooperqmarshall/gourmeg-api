@@ -1,1 +1,1 @@
-web: pipenv run gunicorn app:app
+web: pipenv run gunicorn app:recipe_app

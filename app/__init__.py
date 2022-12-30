@@ -5,31 +5,31 @@ from flask_migrate import Migrate
 import os
 
 
-app = Flask(__name__)
-CORS(app, supports_credentials=True)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config[
+recipe_app = Flask(__name__)
+CORS(recipe_app, supports_credentials=True)
+recipe_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URI']
+recipe_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+recipe_app.config[
     'SQLALCHEMY_ECHO'] = False  # os.environ['FLASK_ENV'] == 'development'
 
 login_manager = LoginManager()
-app.config['SESSION_COOKIE_SECURE'] = False
-app.config['REMEMBER_COOKIE_SECURE'] = False
-app.config['SESSION_COOKIE_HTTPONLY'] = False
-app.config['REMEMBER_COOKIE_HTTPONLY'] = False
-app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
-app.config['REMEMBER_COOKIE_SAMESITE'] = "Strict"
+recipe_app.config['SESSION_COOKIE_SECURE'] = False
+recipe_app.config['REMEMBER_COOKIE_SECURE'] = False
+recipe_app.config['SESSION_COOKIE_HTTPONLY'] = False
+recipe_app.config['REMEMBER_COOKIE_HTTPONLY'] = False
+recipe_app.config['SESSION_COOKIE_SAMESITE'] = "Strict"
+recipe_app.config['REMEMBER_COOKIE_SAMESITE'] = "Strict"
 if os.environ['COOKIE_DOMAIN']:
-    app.config['SESSION_COOKIE_DOMAIN'] = os.environ['COOKIE_DOMAIN']
-    app.config['REMEMBER_COOKIE_DOMAIN'] = os.environ['COOKIE_DOMAIN']
-login_manager.init_app(app)
-app.secret_key = os.environ['SECRET_KEY']
+    recipe_app.config['SESSION_COOKIE_DOMAIN'] = os.environ['COOKIE_DOMAIN']
+    recipe_app.config['REMEMBER_COOKIE_DOMAIN'] = os.environ['COOKIE_DOMAIN']
+login_manager.init_app(recipe_app)
+recipe_app.secret_key = os.environ['SECRET_KEY']
 
 # Objects
 
 # fmt: off
 from app.db.model import db
-migrate = Migrate(app, db)
+migrate = Migrate(recipe_app, db)
 import app.api.routes
 import app.db.schema
 # fmt: on
