@@ -240,6 +240,24 @@ def main_scrape(soup: BeautifulSoup) -> tuple[str, str]:
     return "", ""
 
 
+def scrape_recipe_image(soup: BeautifulSoup) -> list[str]:
+    imgs = [img
+            for img in soup.find_all('img')
+            if 'src' in img.attrs.keys() and img['src'][0:4] == 'http']
+
+    imgs.sort(key=lambda x: (int(x['width'])
+                             if 'width' in x.attrs.keys() and x['width'] != 'auto'
+                             else 100) *
+                            (int(x['height'])
+                             if 'height' in x.attrs.keys() and x['height'] != 'auto'
+                             else 100
+                             ), reverse=True)
+
+    imgs = [img['src'] for img in imgs]
+
+    return imgs
+
+
 def scrape_recipe_url(url):
     page = requests.get(url=url, headers={
                         "User-Agent": """Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:97.0) Gecko/20100101 Firefox/97.0"""})
