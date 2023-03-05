@@ -3,7 +3,7 @@ from flask import request
 from marshmallow.exceptions import ValidationError
 import requests
 from requests.exceptions import RequestException
-from app.db.schema import recipeSchema
+from app.db.schema import recipeSchema, recipesSchema
 from app.db.model import db, Recipe, RecipeList, User
 from flask_login import current_user, login_required
 from app import recipe_app
@@ -66,4 +66,18 @@ def post_recipe():
     
     return recipeSchema.dump(recipe)
 
+
+def search():
+    search_term = request.args.get('term')
+
+    if search_term is None or search_term == '':
+        return {"error": "please supply a search term"}, 400
+
+    print(search_term)
+    recipes = Recipe.query.filter(Recipe.name.ilike(f'%%{search_term}%%')).all()
+
+    return {"recipes": recipesSchema.dump(recipes)}
+
+
 recipe_app.add_url_rule("/api/v2/recipe", view_func=post_recipe, methods=["POST"])
+recipe_app.add_url_rule("/api/v2/search", view_func=search, methods=["GET"])
