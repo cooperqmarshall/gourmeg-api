@@ -183,6 +183,7 @@ def search_recipe_structured_data(data: list):
             ing, ins = search_recipe_structured_data(item)
             if ing and ins:
                 return ing, ins
+            continue
 
         ing = item.get("recipeIngredient")
         ins = item.get("recipeInstructions")
